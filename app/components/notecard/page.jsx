@@ -12,36 +12,28 @@ export default function NoteCard({ note, onEdit, onDelete }) {
   }
 
   return (
-    <div
-      className="card text-black shadow-sm border mb-3 p-3 flex"
-      style={{
-        backgroundColor: "#f8f9fa", // Slightly darker than white
-        width: "18rem", // Set a fixed width for horizontal layout
-        borderRadius: "8px",
-        marginRight: "1rem", // Add margin to the right for spacing between cards
-      }}
-    >
+    <div className="bg-white text-black shadow-lg border mb-4 p-4 rounded-lg w-full max-w-sm">
       <div className="flex flex-col">
-        <h5 className="card-title font-bold text-black mb-2">
-          Title - {note.title || "Untitled Note"}
+        <h5 className="text-lg font-bold text-gray-800 mb-3">
+          {note.title || "Untitled Note"}
         </h5>
 
-        <p className="card-text text-black mb-2">
+        <p className="text-gray-600 mb-4">
           {note.description || "No content available"}
         </p>
 
         <div className="flex justify-between">
           <button
-            className="btn btn-outline-dark btn-sm mr-2"
+            className="flex items-center text-sm text-blue-500 hover:text-blue-700"
             onClick={() => onEdit(note._id)} // Pass the note's ID to the onEdit function
           >
-            <FaEdit /> Edit
+            <FaEdit className="mr-2" /> Edit
           </button>
           <button
-            className="btn btn-outline-dark btn-sm"
+            className="flex items-center text-sm text-red-500 hover:text-red-700"
             onClick={() => onDelete(note._id)} // Pass the note's ID to the onDelete function
           >
-            <FaTrash /> Delete
+            <FaTrash className="mr-2" /> Delete
           </button>
         </div>
       </div>

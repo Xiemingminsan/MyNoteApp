@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useRouter } from "next/navigation"; // Import from next/navigation
+import { useRouter } from "next/navigation";
 import NoteCard from "../notecard/page";
 
 export default function Home() {
@@ -10,10 +10,10 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-  const [currentNoteId, setCurrentNoteId] = useState(null); // Track the note's ID being edited
+  const [currentNoteId, setCurrentNoteId] = useState(null);
   const [notes, setNotes] = useState([]);
-  const [filteredNotes, setFilteredNotes] = useState([]); // For filtered notes
-  const [username, setUsername] = useState(""); // Track the logged-in username
+  const [filteredNotes, setFilteredNotes] = useState([]);
+  const [username, setUsername] = useState("");
 
   const router = useRouter();
 
@@ -21,16 +21,16 @@ export default function Home() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      router.push("/components/login"); // Redirect to login if no token found
+      router.push("/components/login");
       return;
     }
 
     try {
       const decoded = jwtDecode(token);
-      setUsername(decoded.username); // Set the username from the token
+      setUsername(decoded.username);
     } catch (error) {
       console.error("Invalid token:", error);
-      router.push("/components/login"); // Redirect if the token is invalid
+      router.push("/components/login");
     }
 
     const fetchNotes = async () => {
@@ -38,13 +38,13 @@ export default function Home() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Include JWT token in Authorization header
+          Authorization: `Bearer ${token}`,
         },
       });
       if (notesRes.ok) {
         const notesData = await notesRes.json();
         setNotes(notesData);
-        setFilteredNotes(notesData); // Initialize filtered notes with all notes
+        setFilteredNotes(notesData);
       } else {
         console.error("Error fetching notes:", notesRes);
       }
@@ -63,44 +63,45 @@ export default function Home() {
       );
       setFilteredNotes(filtered);
     } else {
-      setFilteredNotes(notes); // If search is empty, show all notes
+      setFilteredNotes(notes);
     }
   }, [search, notes]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Clear token from local storage
-    localStorage.removeItem("username"); // Clear username from local storage
-    router.push("/components/login"); // Redirect to login page
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    router.push("/components/login");
   };
 
   const toggleCreateNote = () => {
-    setCurrentNoteId(null); // Clear currentNoteId when creating a new one
-    setTitle(""); // Clear the title
-    setDescription(""); // Clear the description
+    setCurrentNoteId(null);
+    setTitle("");
+    setDescription("");
     setShowPopup(!showPopup);
   };
+
   const handleEdit = (id) => {
-    console.log("Editing note with ID:", id); // Log the note's _id
+    console.log("Editing note with ID:", id);
     const noteToEdit = notes.find((note) => note._id === id);
-    setCurrentNoteId(id); // Track the note's _id being edited
-    setTitle(noteToEdit.title); // Set title and description for the popup
+    setCurrentNoteId(id);
+    setTitle(noteToEdit.title);
     setDescription(noteToEdit.description);
-    setShowPopup(true); // Show the edit popup
+    setShowPopup(true);
   };
 
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
 
-    if (!currentNoteId) return; // Safety check
+    if (!currentNoteId) return;
 
     const token = localStorage.getItem("token");
     const res = await fetch(`/api/note/${currentNoteId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Include JWT token in Authorization header
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ title, description }), // Update both title and description
+      body: JSON.stringify({ title, description }),
     });
 
     if (res.ok) {
@@ -109,11 +110,11 @@ export default function Home() {
           ? { ...note, title, description }
           : note
       );
-      setNotes([...updatedNotes]); // Update the notes array with the edited note
-      setCurrentNoteId(null); // Clear the currentNoteId
-      setTitle(""); // Clear the title
-      setDescription(""); // Clear the description
-      setShowPopup(false); // Close the popup
+      setNotes([...updatedNotes]);
+      setCurrentNoteId(null);
+      setTitle("");
+      setDescription("");
+      setShowPopup(false);
       alert("Note updated successfully!");
     }
   };
@@ -124,14 +125,14 @@ export default function Home() {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Include JWT token in Authorization header
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (res.ok) {
       const updatedNotes = notes.filter((note) => note._id !== id);
-      setNotes(updatedNotes); // Remove the note from state
-      setFilteredNotes(updatedNotes); // Update filtered notes as well
+      setNotes(updatedNotes);
+      setFilteredNotes(updatedNotes);
       alert("Note deleted successfully!");
     }
   };
@@ -145,7 +146,7 @@ export default function Home() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Include JWT token in Authorization header
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ title, description }),
     });
@@ -159,18 +160,17 @@ export default function Home() {
       toggleCreateNote();
       alert("Note created successfully!");
 
-      // Fetch the notes again after creation to update the state
       const notesRes = await fetch("/api/note", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Include JWT token in Authorization header
+          Authorization: `Bearer ${token}`,
         },
       });
       if (notesRes.ok) {
         const notesData = await notesRes.json();
         setNotes(notesData);
-        setFilteredNotes(notesData); // Update filtered notes with all notes
+        setFilteredNotes(notesData);
       } else {
         console.error("Error fetching notes:", notesRes);
       }
@@ -180,45 +180,43 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center">
       {/* Navbar */}
+
       <nav className="bg-white border-b border-gray-200 p-4 w-full flex justify-between items-center">
-        <div className="text-black font-semibold text-lg">My Notes App</div>
-        <div className="flex items-center space-x-4 text-sm">
-          <div className="text-blue-900">Greetings - {username}</div>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-3 py-1 rounded-md"
-          >
-            Logout
-          </button>
+        <div className="text-xl font-bold text-gray-800">My Notes App</div>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center">
+            <span className="text-sm text-gray-600 mr-2">
+              Greetings- {username}
+            </span>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </nav>
 
-      {/* Search Bar */}
-      <div className="bg-white p-4 w-full flex justify-center border-b border-gray-200">
-        <div className="flex space-x-2 items-center">
-          <input
-            className="p-2 border border-gray-300 rounded-md text-black w-64 md:w-80"
-            type="search"
-            placeholder="Search Notes"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
-            Search
-          </button>
-        </div>
+      <div className="mt-2 flex justify-center">
+        <input
+          className="p-2 border border-gray-300 rounded-l-lg text-black w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          type="search"
+          placeholder="Search Notes"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r-lg">
+          Search
+        </button>
       </div>
 
       {/* Body Content */}
       <div className="container mt-4 px-4 md:px-0">
-        <h1 className="text-red-900 mb-4 text-center md:text-left">
-          Your Notes
-        </h1>
-        <h1 className="text-black mb-4 text-center md:text-left">
-          What do you have in mind today?
-        </h1>
+        <h1 className="text-red-900 mb-4">Your Notes</h1>
+        <h1 className="text-black mb-4">What do you have in mind today?</h1>
 
-        <div className="flex flex-wrap justify-center md:justify-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filteredNotes.length === 0 ? (
             <p>No notes available</p>
           ) : (
@@ -234,18 +232,10 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Plus Button */}
-      <button
-        className="fixed bottom-5 left-5 w-12 h-12 bg-blue-500 text-white rounded-full flex justify-center items-center text-2xl"
-        onClick={toggleCreateNote}
-      >
-        +
-      </button>
-
       {/* Create/Edit Note Popup */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
-          <div className="bg-white p-8 border border-gray-300 shadow-lg rounded-lg w-full max-w-sm md:w-96">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 border border-gray-300 shadow-lg rounded-lg w-96">
             <h5 className="font-semibold text-lg mb-4 text-black">
               {currentNoteId ? "Edit Note" : "Create Note"}
             </h5>
@@ -290,5 +280,3 @@ export default function Home() {
     </div>
   );
 }
-
-// Compare this snippet from app/components/notecard/page.jsx:
