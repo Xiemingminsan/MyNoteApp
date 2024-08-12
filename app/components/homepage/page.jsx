@@ -232,6 +232,13 @@ export default function Home() {
         </div>
       </div>
 
+      <button
+        className="fixed bottom-5 right-5 w-14 h-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex justify-center items-center text-2xl shadow-lg transform hover:scale-105 transition-transform duration-200"
+        onClick={toggleCreateNote}
+      >
+        +
+      </button>
+
       {/* Create/Edit Note Popup */}
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
