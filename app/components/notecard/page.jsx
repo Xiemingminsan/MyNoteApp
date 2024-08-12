@@ -4,7 +4,12 @@ import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 export default function NoteCard({ note, onEdit, onDelete }) {
-  console.log(note); // Inspect the note object to ensure it has an id
+  // Check if the note object exists and has the necessary properties
+  if (!note || !note._id) {
+    return (
+      <div className="text-center text-gray-500">Note data unavailable</div>
+    );
+  }
 
   return (
     <div
