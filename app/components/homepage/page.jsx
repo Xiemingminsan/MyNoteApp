@@ -206,15 +206,15 @@ export default function Home() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r-lg">
+        <button className="bg-custom-blue hover:bg-blue-600 text-white px-4 py-2 rounded-r-lg">
           Search
         </button>
       </div>
 
       {/* Body Content */}
       <div className="container mt-4 px-4 md:px-0">
-        <h1 className="text-red-900 mb-4">Your Notes</h1>
-        <h1 className="text-black mb-4">What do you have in mind today?</h1>
+        <h1 className="text-custom-blue mb-4">Your Notes</h1>
+        <h1 className="text-black mb-4 ">What do you have in mind today?</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filteredNotes.length === 0 ? (

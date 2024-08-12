@@ -24,7 +24,7 @@ export default function NoteCard({ note, onEdit, onDelete }) {
 
         <div className="flex justify-between">
           <button
-            className="flex items-center text-sm text-blue-500 hover:text-blue-700"
+            className="flex items-center text-sm text-blue-500 hover:custom-blue"
             onClick={() => onEdit(note._id)} // Pass the note's ID to the onEdit function
           >
             <FaEdit className="mr-2" /> Edit
